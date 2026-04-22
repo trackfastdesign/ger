@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plataforma Estratégica: Protocolo da Transposição</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <style>
+    :root {
+      --bg-sidebar: #1e293b;
+      --bg-sidebar-hover: #334155;
+      --bg-sidebar-active: #0f172a;
+      --text-sidebar: #f8fafc;
+      --bg-main: #f1f5f9;
+      --text-main: #334155;
+      --red-dark: #8B0000;
+      --white: #ffffff;
+      --accent: #3b82f6;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      display: flex;
+      height: 100vh;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      overflow: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 320px;
+      background: var(--bg-sidebar);
+      color: var(--text-sidebar);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+      z-index: 10;
+      flex-shrink: 0;
+    }
+
+    .sidebar h2 {
+      padding: 20px;
+      margin: 0;
+      font-size: 18px;
+      background: var(--bg-sidebar-active);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 1px solid #475569;
+    }
+
+    .sidebar-scroll {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar li {
+      padding: 15px 20px;
+      cursor: pointer;
+      border-bottom: 1px solid #334155;
+      transition: all 0.2s;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sidebar li:hover, .sidebar li.active {
+      background: var(--bg-sidebar-hover);
+      border-left: 4px solid var(--accent);
+    }
+
+    /* Main Content */
+    .main {
+      flex: 1;
+      height: 100vh;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+    }
+
+    .content-wrapper {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px;
+    }
+
+    /* Special Sections (Red/White) */
+    .special-section {
+      background-color: var(--red-dark);
+      color: var(--white);
+      padding: 40px;
+      border-radius: 8px;
+      margin-bottom: 40px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      display: none;
+    }
+
+    .special-section.active {
+      display: block;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .special-section h2, 
+    .special-section h3 {
+      color: var(--white);
+      margin-top: 0;
+      font-size: 28px;
+    }
+
+    .special-section hr {
+      border: 0;
+      height: 1px;
+      background-color: var(--white);
+      margin: 20px 0;
+      opacity: 0.3;
+    }
+
+    .special-section p {
+      line-height: 1.6;
+      font-size: 16px;
+      text-align: justify;
+      margin-bottom: 15px;
+    }
+
+    /* Area Container (White Box) */
+    .area-container {
+      background: var(--white);
+      border-radius: 8px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      display: none;
+    }
+
+    .area-container.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .area-header h3 {
+      margin: 0 0 20px 0;
+      color: var(--bg-sidebar);
+      font-size: 22px;
+      border-bottom: 2px solid var(--bg-main);
+      padding-bottom: 10px;
+    }
+
+    /* Cards Strategy (Adaptados de OKR-Card) */
+    .okr-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-left: 4px solid var(--accent);
+      border-radius: 6px;
+      padding: 20px;
+      margin-bottom: 20px;
+      transition: transform 0.2s;
+    }
+
+    .okr-card:hover {
+      transform: translateX(5px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .okr-id {
+      font-size: 12px;
+      font-weight: bold;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+
+    .okr-obj {
+      font-size: 16px;
+      font-weight: bold;
+      color: var(--bg-sidebar);
+      margin-bottom: 10px;
+    }
+
+    .okr-resumo {
+      font-size: 14px;
+      color: #475569;
+      line-height: 1.5;
+    }
+
+    /* Grids e Gráficos */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    .chart-box {
+      width: 100%;
+      height: 350px;
+      position: relative;
+      margin: 0 auto;
+    }
+
+    /* Tabelas e Filtros (Diretório) */
+    .filters {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .filters input, .filters select {
+      padding: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 14px;
+      flex: 1;
+      outline: none;
+    }
+
+    .filters input:focus, .filters select:focus {
+      border-color: var(--accent);
+    }
+
+    .directory-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    .directory-table th, .directory-table td {
+      padding: 15px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .directory-table th {
+      background: #f1f5f9;
+      color: #334155;
+      font-weight: bold;
+    }
+
+    .directory-table tr:hover {
+      background-color: #f8fafc;
+    }
+
+    .badge {
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    .badge-nacional { background: #e2e8f0; color: #334155; }
+    .badge-internacional { background: #dbeafe; color: #1e40af; }
+    .badge-imprensa { background: #d1fae5; color: #065f46; }
+
+    /* Template Box */
+    .template-box {
+      background: rgba(255,255,255,0.1);
+      padding: 20px;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 14px;
+      white-space: pre-wrap;
+      border-left: 4px solid var(--white);
+      margin-top: 20px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Scrollbars */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    .sidebar ::-webkit-scrollbar-thumb { background: #475569; }
+
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <h2>Índice Estratégico</h2>
+    <div class="sidebar-scroll">
+      <ul id="sidebar-menu">
+        <li onclick="showSection('intro')" id="menu-intro" class="active">&#x1F3AF; Centro de Comando</li>
+        <li onclick="showSection('ameacas')" id="menu-ameacas">&#x26A0; Mapa de Ameaças</li>
+        <li onclick="showSection('estrategia')" id="menu-estrategia">&#x1F5FA; Master Plan / Estratégia</li>
+        <li onclick="showSection('juridico')" id="menu-juridico">&#x2696; Frente Jurídica</li>
+        <li onclick="showSection('viabilidade')" id="menu-viabilidade">&#x1F4B8; Viabilidade e Prazos</li>
+        <li onclick="showSection('diretorio')" id="menu-diretorio">&#x1F4DE; Diretório e Ação</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="main" id="main-content">
+    <div class="content-wrapper">
+
+      <div id="sec-intro" class="special-section active">
+        <h2>Centro de Comando: O Protocolo</h2>
+        <hr>
+        <p>Bem-vindo à plataforma de gestão do <strong>Protocolo da Transposição</strong>. Esta aplicação foi desenhada para vítimas de perseguição sistêmica, lawfare e assassinato de reputação.</p>
+        <p>O objetivo principal é fornecer uma arquitetura de informação que converta o trauma passivo em um ativo estratégico e intelectual, permitindo a retomada de direitos fundamentais. A separação entre luta pessoal e atividade profissional é funcional: sua história pessoal atua como o <strong>"Validante"</strong> da falha sistêmica; a sua atuação técnica é a <strong>"Solução"</strong>.</p>
+        <p>A mudança de paradigma ocorre ao adotar a postura de <strong>Gestor Estratégico</strong>. Utilizando Litigância Estratégica, Inteligência Artificial e Narrative Framing, o indivíduo transcende a condição de "Prejudicado" para estabelecer-se como Especialista.</p>
+      </div>
+
+      <div id="sec-ameacas-header" class="special-section" style="display:none; margin-bottom: 20px;">
+        <h2>Mapeamento do Cenário de Ameaças</h2>
+        <hr>
+        <p>Compreender a multidimensionalidade da perseguição é vital para articular a defesa correta. Vítimas de complô enfrentam uma rede coordenada que atua através de táticas para invalidação moral e civil, impossibilitando a defesa pelas vias comuns.</p>
+      </div>
+      
+      <div id="sec-ameacas-content" class="area-container" style="display:none;">
+        <div class="area-header">
+          <h3>Rastreio Multidimensional (Radar)</h3>
+        </div>
+        <div class="grid-2">
+          <div class="chart-box">
+            <canvas id="threatRadar"></canvas>
+          </div>
+          <div>
+            <div class="okr-card" style="border-left-color: #8B0000;">
+              <div class="okr-obj">Eixo Psicológico & Social</div>
+              <div class="okr-resumo">
+                <ul style="padding-left: 20px; margin: 0;">
+                  <li><strong>Gaslighting Coletivo:</strong> Manipulação da percepção da realidade.</li>
+                  <li><strong>Mobbing:</strong> Assédio grupal coordenado para exclusão.</li>
+                  <li><strong>Bode Expiatório:</strong> Atribuição de culpa sistêmica ao indivíduo.</li>
+                </ul>
+              </div>
+            </div>
+            <div class="okr-card" style="border-left-color: #1e3a8a;">
+              <div class="okr-obj">Eixo Jurídico & Institucional</div>
+              <div class="okr-resumo">
+                <ul style="padding-left: 20px; margin: 0;">
+                  <li><strong>Litispendência de Má-fé:</strong> Uso do judiciário para asfixia financeira.</li>
+                  <li><strong>Assédio Processual:</strong> Obstrução proposital do exercício da lei.</li>
+                  <li><strong>Conluio/Omissão:</strong> Ação coordenada ou inércia de agentes do Estado.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="sec-estrategia-header" class="special-section" style="display:none; margin-bottom: 20px;">
+        <h2>Master Plan de Transposição</h2>
+        <hr>
+        <p>Este fluxo operacional descreve os nichos de ação necessários para reverter a morte civil. A execução metodológica garante a blindagem do indivíduo e a criação de um legado protetivo.</p>
+      </div>
+
+      <div id="sec-estrategia-content" class="area-container" style="display:none;">
+        <div class="area-header">
+          <h3>Fases Estratégicas e Ações de Blindagem</h3>
+        </div>
+        
+        <div class="okr-card">
+          <div class="okr-id">FASE I | TÁTICA</div>
+          <div class="okr-obj">A Entidade Institucional (Recomendado)</div>
+          <div class="okr-resumo">Estabelecer uma Fundação, OSCIP ou Instituto que "carregue" o peso da causa de Direitos Humanos. Isto permite que você atue blindado como o Especialista Técnico (CEO/Presidente) da entidade, ganhando representatividade oficial e não sendo visto apenas como um indivíduo queixoso.</div>
+        </div>
+
+        <div class="okr-card">
+          <div class="okr-id">FASE II | OPERACIONAL</div>
+          <div class="okr-obj">Delegação e Compartimentalização</div>
+          <div class="okr-resumo">Contrate Paralegais ou Ex-Oficiais Administrativos sob Acordo de Confidencialidade (NDA) rígido. Eles farão o primeiro contato e a triagem institucional, evitando o desgaste emocional e a quebra da bolha de rejeição sistêmica.</div>
+        </div>
+
+        <div class="okr-card">
+          <div class="okr-id">FASE III | COMUNICAÇÃO</div>
+          <div class="okr-obj">Escudo Digital e Publicidade Pública</div>
+          <div class="okr-resumo">Criação do portal "Voz da Integridade" com amplo SEO para dominar buscas nominais. Paralelamente, publicar uma Notificação no Diário Oficial da União (D.O.U.) ou em Blockchain, criando fé pública e interrompendo prescrições legais (O que não está nos autos, não está no mundo).</div>
+        </div>
+      </div>
+
+      <div id="sec-juridico-header" class="special-section" style="display:none; margin-bottom: 20px;">
+        <h2>Base Jurídica e Acionamento</h2>
+        <hr>
+        <p>Para transpor a perseguição, a vítima deve utilizar os marcos da jurisprudência de Lawfare e Direitos Humanos. O segredo da Litigância Estratégica é a obtenção de um Parecer Prévio independente que valide a tese de Complô.</p>
+      </div>
+
+      <div id="sec-juridico-content" class="area-container" style="display:none;">
+        <div class="area-header">
+          <h3>Soluções e Precedentes Apropriados</h3>
+        </div>
+        
+        <div class="grid-2">
+          <div>
+            <div class="okr-card" style="border-left-color: #8B0000;">
+              <div class="okr-obj">Soluções Processuais</div>
+              <div class="okr-resumo">
+                <ul style="padding-left: 20px; margin: 0;">
+                  <li><strong>Ação de Reforma/Inatividade:</strong> Pedido de inatividade fundamentado em doença ocupacional (ex: trauma psicológico) gerada por assédio institucional.</li>
+                  <li><strong>Indenização contra o Estado:</strong> Danos morais/materiais na Justiça Federal por omissão de agentes públicos.</li>
+                  <li><strong>Instâncias Internacionais:</strong> Acionar a CIDH ou o Comitê de Direitos Humanos da ONU após esgotamento interno.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="okr-card" style="border-left-color: #3b82f6;">
+              <div class="okr-obj">Jurisprudência e Estudos</div>
+              <div class="okr-resumo">
+                <ul style="padding-left: 20px; margin: 0;">
+                  <li><strong>Corte IDH (Caso Herzog vs. Brasil):</strong> Reconhecimento de omissão e perseguição estatal.</li>
+                  <li><strong>STJ:</strong> Assédio Moral Sistêmico na Administração Pública gera dever de indenizar.</li>
+                  <li><strong>ECHR (Guja vs. Moldova):</strong> Proteção clássica estabelecida para Whistleblowers (denunciantes).</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="sec-viabilidade-header" class="special-section" style="display:none; margin-bottom: 20px;">
+        <h2>Viabilidade Financeira e Cronograma</h2>
+        <hr>
+        <p>A litigância estratégica requer planejamento de recursos e tempo. A meta primária do Protocolo é reduzir a exposição financeira a zero através da adoção do caso como "Litígio Estratégico" por ONGs de impacto, Clínicas Pro Bono (USP/FGV) ou a DPU.</p>
+      </div>
+
+      <div id="sec-viabilidade-content" class="area-container" style="display:none;">
+        <div class="area-header">
+          <h3>Projeção de Custos vs. Tempo de Litígio</h3>
+        </div>
+        
+        <div class="grid-2">
+          <div>
+            <h4 style="text-align:center; color:#334155;">Composição de Custos (Via Privada)</h4>
+            <div class="chart-box">
+              <canvas id="costChart"></canvas>
+            </div>
+          </div>
+          <div>
+            <h4 style="text-align:center; color:#334155;">Cronograma do Processo (Anos)</h4>
+            <div class="chart-box">
+              <canvas id="timelineChart"></canvas>
+            </div>
+            <div class="okr-card" style="margin-top: 15px; padding: 15px;">
+              <div class="okr-resumo">A longa duração processual (até 10 anos em cortes internacionais) exige a garantia de uma <strong>blindagem de relações públicas</strong> inicial para sobrevivência social.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="sec-diretorio-header" class="special-section" style="display:none; margin-bottom: 20px;">
+        <h2>Diretório Estratégico de Articulação</h2>
+        <hr>
+        <p>Base mapeada de organizações, jornalistas investigativos e juristas de alta patente. Utilize os filtros para localizar representantes e proponha a sua tese não como um pedido de vingança, mas como um <strong>precedente jurídico histórico</strong>.</p>
+        
+        <div class="template-box"><strong>Template de Abordagem Inicial:</strong>
+
+Prezado(a) [Nome do Profissional],
+Sou [Sua Profissão/Patente] e venho documentando um padrão de 'Character Assassination' e 'Lawfare' que configura um claro assédio institucional sistêmico. 
+
+Após sobreviver a essa tentativa de morte civil, utilizei métricas e evidências validadas para transformar este dossiê num marco de defesa de Direitos Humanos e proteção de denunciantes institucionais. 
+
+Solicito uma breve análise técnica para eventual emissão de 'Amicus Curiae' ou representação estratégica pro bono. 
+Podemos agendar uma chamada segura?</div>
+      </div>
+
+      <div id="sec-diretorio-content" class="area-container" style="display:none;">
+        <div class="area-header">
+          <h3>Filtro de Entidades e Autoridades</h3>
+        </div>
+        
+        <div class="filters">
+          <input type="text" id="contactSearch" onkeyup="filterDirectory()" placeholder="Pesquisar por nome ou entidade...">
+          <select id="contactCategory" onchange="filterDirectory()">
+            <option value="All">Todos os Âmbitos</option>
+            <option value="Nacional">Juristas Nacionais (BR)</option>
+            <option value="Internacional">Direitos Humanos Internacional</option>
+            <option value="Imprensa">Mídia / Agências PR</option>
+          </select>
+        </div>
+
+        <table class="directory-table">
+          <thead>
+            <tr>
+              <th>Nome / Entidade</th>
+              <th>Especialidade / Papel Institucional</th>
+              <th style="text-align:center;">Âmbito</th>
+            </tr>
+          </thead>
+          <tbody id="directoryTableBody">
+            </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // ================= DADOS ================= //
+    const contactsDb = [
+      { name: "Ministério Público Federal (MPF - PFDC)", role: "Investigação de Violações de Direitos e Conluios", cat: "Nacional" },
+      { name: "Oscar Vilhena Vieira", role: "Especialista Constitucional / FGV", cat: "Nacional" },
+      { name: "Sérgio Suiama", role: "Procurador da República / Direitos Humanos", cat: "Nacional" },
+      { name: "Defensoria Pública da União (DPU)", role: "Assistência e Combate a Assédio Processual", cat: "Nacional" },
+      { name: "Flávia Piovesan", role: "Direitos Humanos Internacionais (PUC-SP)", cat: "Nacional" },
+      { name: "Lawfare Institute", role: "Combate ao uso abusivo da lei", cat: "Nacional" },
+      { name: "OAB Nacional - Tribunais de Ética", role: "Denúncias contra Litispendência de má-fé", cat: "Nacional" },
+      
+      { name: "Transparency International", role: "Proteção a Denunciantes Globais (Whistleblowers)", cat: "Internacional" },
+      { name: "Amal Clooney", role: "Clooney Foundation for Justice", cat: "Internacional" },
+      { name: "Amnesty International", role: "Proteção contra Violações Estatais", cat: "Internacional" },
+      { name: "Ben Wizner", role: "ACLU - Civil Liberties", cat: "Internacional" },
+      { name: "Blueprint for Free Speech", role: "Rede de Proteção Legal e Física", cat: "Internacional" },
+      { name: "Dunja Mijatovi?", role: "Council of Europe HR Commissioner", cat: "Internacional" },
+      { name: "Guernica 37", role: "Câmaras de Justiça Internacional", cat: "Internacional" },
+
+      { name: "The Intercept Brasil", role: "Jornalismo Investigativo", cat: "Imprensa" },
+      { name: "Agência Pública", role: "Reportagens de Violações Institucionais", cat: "Imprensa" },
+      { name: "BBC News HR Desk", role: "Cobertura Global de Direitos Humanos", cat: "Imprensa" },
+      { name: "AKQA Casa / Ogilvy PR", role: "Campanhas Criativas Pro Bono (Impacto)", cat: "Imprensa" },
+      { name: "Repórter Brasil", role: "Monitoramento de Assédio Trabalhista/Moral", cat: "Imprensa" }
+    ];
+
+    let chartsRendered = false;
+
+    // ================= RENDER TABELA ================= //
+    function populateDirectory(data) {
+      const tbody = document.getElementById('directoryTableBody');
+      tbody.innerHTML = '';
+
+      if (data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">Nenhum contato encontrado.</td></tr>';
+        return;
+      }
+
+      data.forEach(item => {
+        let badgeClass = "badge-nacional";
+        if (item.cat === 'Internacional') badgeClass = "badge-internacional";
+        if (item.cat === 'Imprensa') badgeClass = "badge-imprensa";
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="font-weight: 600;">${item.name}</td>
+          <td>${item.role}</td>
+          <td style="text-align:center;"><span class="badge ${badgeClass}">${item.cat}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterDirectory() {
+      const query = document.getElementById('contactSearch').value.toLowerCase();
+      const cat = document.getElementById('contactCategory').value;
+
+      const filtered = contactsDb.filter(c => {
+        const matchName = c.name.toLowerCase().includes(query) || c.role.toLowerCase().includes(query);
+        const matchCat = cat === 'All' || c.cat === cat;
+        return matchName && matchCat;
+      });
+      populateDirectory(filtered);
+    }
+
+    // ================= GRÁFICOS (Chart.js) ================= //
+    function initCharts() {
+      if(chartsRendered) return;
+
+      // 1. Radar Chart (Ameaças)
+      const ctxRadar = document.getElementById('threatRadar');
+      if(ctxRadar) {
+        new Chart(ctxRadar.getContext('2d'), {
+          type: 'radar',
+          data: {
+            labels: ['Gaslighting/Isolamento', 'Destruição Reputacional', 'Assédio Processual', 'Conluio/Omissão', 'Asfixia Financeira'],
+            datasets: [{
+              label: 'Intensidade Sistêmica',
+              data: [9, 10, 8, 9, 7],
+              backgroundColor: 'rgba(139, 0, 0, 0.2)',
+              borderColor: '#8B0000',
+              pointBackgroundColor: '#1e3a8a',
+              borderWidth: 2
+            }]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            scales: { r: { ticks: { display: false, max: 10, min: 0 } } },
+            plugins: { legend: { display: false } }
+          }
+        });
+      }
+
+      // 2. Cost Chart (Doughnut)
+      const ctxCost = document.getElementById('costChart');
+      if(ctxCost) {
+        new Chart(ctxCost.getContext('2d'), {
+          type: 'doughnut',
+          data: {
+            labels: ['Honorários de Manutenção/Elite', 'Forense e Auditoria', 'Relações Públicas (PR)', 'Custas de Litígio'],
+            datasets: [{
+              data: [50, 20, 25, 5],
+              backgroundColor: ['#8B0000', '#1e3a8a', '#475569', '#cbd5e1'],
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false, cutout: '60%',
+            plugins: { legend: { position: 'bottom' } }
+          }
+        });
+      }
+
+      // 3. Timeline Chart (Bar)
+      const ctxTime = document.getElementById('timelineChart');
+      if(ctxTime) {
+        new Chart(ctxTime.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: ['Estratégia PR (Ano 1-2)', 'Litígio Interno (Ano 3-5)', 'Cortes Internacionais (Ano 5-10)'],
+            datasets: [{
+              label: 'Tempo Acumulado (Anos)',
+              data: [2, 5, 10],
+              backgroundColor: ['#475569', '#1e3a8a', '#8B0000'],
+              borderRadius: 4
+            }]
+          },
+          options: {
+            indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+            scales: { x: { max: 10 } },
+            plugins: { legend: { display: false } }
+          }
+        });
+      }
+
+      chartsRendered = true;
+    }
+
+    // ================= NAVEGAÇÃO SPA ================= //
+    function showSection(sectionId) {
+      // 1. Esconder tudo
+      const sections = document.querySelectorAll('.special-section, .area-container');
+      sections.forEach(sec => sec.style.display = 'none');
+      
+      // 2. Resetar menu
+      const menus = document.querySelectorAll('.sidebar li');
+      menus.forEach(menu => menu.classList.remove('active'));
+
+      // 3. Mostrar seção e seu container de conteúdo se existir
+      const headerObj = document.getElementById(`sec-${sectionId}-header`);
+      const contentObj = document.getElementById(`sec-${sectionId}-content`);
+      const fullObj = document.getElementById(`sec-${sectionId}`); // Para o painel intro q é unico
+
+      if(headerObj) headerObj.classList.add('active');
+      if(contentObj) contentObj.classList.add('active');
+      if(fullObj) fullObj.classList.add('active');
+
+      // 4. Marcar item ativo no sidebar
+      const activeMenu = document.getElementById(`menu-${sectionId}`);
+      if(activeMenu) activeMenu.classList.add('active');
+
+      // 5. Scroll para o topo
+      document.getElementById('main-content').scrollTop = 0;
+
+      // 6. Init Gráficos se as seções que os contém forem abertas
+      if(sectionId === 'ameacas' || sectionId === 'viabilidade') {
+        // Usa timeout pequeno para garantir que a div já perdeu o display:none
+        setTimeout(initCharts, 50); 
+      }
+    }
+
+    // ================= INICIALIZAÇÃO ================= //
+    window.onload = () => {
+      populateDirectory(contactsDb);
+      showSection('intro'); // Inicia na Visão Geral
+    };
+  </script>
+</body>
+</html>
