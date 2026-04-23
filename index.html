@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Protocolo da Transposição | Plataforma Estratégica Unificada</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <h1>Índice Estratégico</h1>
+    </div>
+
+    <div class="sidebar-scroll">
+      <nav id="sidebar-menu" class="sidebar-menu">
+        <div class="sidebar-group">Base Editorial</div>
+        <button class="sidebar-item active" data-section="apresentacao">
+          <span>Apresentação</span>
+        </button>
+        <button class="sidebar-item" data-section="apendice">
+          <span>Apêndice Técnico</span>
+        </button>
+        <button class="sidebar-item" data-section="glossario">
+          <span>Glossário Avançado</span>
+        </button>
+        <button class="sidebar-item" data-section="indice">
+          <span>Índice Remissivo</span>
+        </button>
+
+        <div class="sidebar-group">Diagnóstico e Operação</div>
+        <button class="sidebar-item" data-section="comando">
+          <span>Centro de Comando</span>
+        </button>
+        <button class="sidebar-item" data-section="ameacas">
+          <span>Mapa de Ameaças</span>
+        </button>
+        <button class="sidebar-item" data-section="operacoes">
+          <span>Gestão Administrativa</span>
+        </button>
+        <button class="sidebar-item" data-section="estrategia">
+          <span>Estratégia e Identidade</span>
+        </button>
+        <button class="sidebar-item" data-section="juridico">
+          <span>Frente Jurídica</span>
+        </button>
+        <button class="sidebar-item" data-section="masterplan">
+          <span>Master Plan</span>
+        </button>
+        <button class="sidebar-item" data-section="viabilidade">
+          <span>Viabilidade e Prazos</span>
+        </button>
+
+        <div class="sidebar-group">Rede e Incidência</div>
+        <button class="sidebar-item" data-section="entidades">
+          <span>Rede de Defesa</span>
+          <span class="badge">12</span>
+        </button>
+        <button class="sidebar-item" data-section="diretorio">
+          <span>Diretório Estratégico</span>
+          <span class="badge">50+</span>
+        </button>
+        <button class="sidebar-item" data-section="agenda">
+          <span>Agenda de Contatos</span>
+        </button>
+
+        <div class="sidebar-group">Expansão Internacional</div>
+        <button class="sidebar-item" data-section="nicho11">
+          <span>Nicho XI — Proteção Internacional</span>
+        </button>
+        <button class="sidebar-item" data-section="nicho12">
+          <span>Nicho XII — Petição Coletiva e Lideranças</span>
+        </button>
+      </nav>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="content-wrapper">
+
+      <section id="apresentacao" class="page-section special-section active">
+        <h2>Apresentação Formal</h2>
+        <hr />
+        <p>
+          Esta plataforma editorial unifica metodologias de documentação, advocacy, litigância estratégica,
+          proteção contra retaliação e organização de redes de apoio. A proposta central é transformar
+          experiências de supressão de direitos, censura, isolamento institucional e dano reputacional em
+          uma arquitetura de resposta verificável, organizada e juridicamente sustentável.
+        </p>
+        <p>
+          O conteúdo foi consolidado para oferecer leitura executiva, navegação rápida, estrutura visual
+          semelhante ao site de referência e compartimentação adequada entre diagnóstico, ação institucional,
+          incidência internacional e diretórios de apoio.
+        </p>
+        <p>
+          A linguagem foi adaptada para remover elementos pessoais identificáveis, reduzir risco reputacional
+          e reforçar um enquadramento técnico voltado à proteção de direitos humanos, documentação de abusos,
+          segurança narrativa e construção de legitimidade pública.
+        </p>
+      </section>
+
+      <section id="apendice" class="page-section special-section">
+        <h2>Apêndice Técnico: Metodologia</h2>
+        <hr />
+        <div id="apendice-content"></div>
+      </section>
+
+      <section id="glossario" class="page-section special-section">
+        <h2>Glossário Avançado</h2>
+        <hr />
+        <div id="glossario-content"></div>
+      </section>
+
+      <section id="indice" class="page-section special-section">
+        <h2>Índice Remissivo</h2>
+        <hr />
+        <div id="indice-content" class="index-grid"></div>
+      </section>
+
+      <section id="comando" class="page-section standard-section">
+        <div class="area-header">
+          <h2>Centro de Comando</h2>
+          <p>Visão executiva da arquitetura estratégica, dos vetores de risco e da lógica de resposta institucional.</p>
+        </div>
+        <div id="comando-content"></div>
+      </section>
+
+      <section id="ameacas" class="page-section standard-section">
+        <div class="area-header">
+          <h2>Mapa de Ameaças</h2>
+          <p>Leitura multidimensional dos vetores de pressão psicológica, jurídica, reputacional e institucional.</p>
+        </div>
+        <div class="chart-box">
+          <div class="chart-title">Impacto dos Vetores de Supressão</div>
+          <div class="chart-subtitle">Leitura qualitativa comparativa por eixo de incidência</div>
+          <div class="chart-container">
+            <canvas id="threatRadar"></canvas>
+          </div>
+        </div>
+        <div id="ameacas-content"></div>
+      </section>
+
+      <section id="operacoes" class="page-section standard-section">
+        <div class="area-header">
+          <h2>Gestão Administrativa</h2>
+          <p>Delegação, proteção documental, triagem institucional, blindagem operacional e protocolos de formalização.</p>
+        </div>
+        <div id="operacoes-content"></div>
+      </section>
+
+      <section id="estrategia" class="page-section standard-section">
+        <div class="area-header">
+          <h2>Estratégia e Identidade</h2>
+          <p>Reposicionamento narrativo, blindagem reputacional e construção de legitimidade pública.</p>
+        </div>
+        <div id="estrategia-content"></div>
+      </section>
+
+      <section id="juridico" class="page-section standard-section">
+        <div class="area-header">
+          <h2>Frente Jurídica</h2>
+          <p>Fundamentos, teses, canais de acionamento, precedentes e enquadramentos adequados.</p>
+        </div>
+        <div id="juridico-content"></div>
+      </section>
+
+      <section id="masterplan" class="page-section standard-section">
+        <div class="area-header">
+          <h2>Master Plan</h2>
+          <p>Fases de execução articuladas entre segurança, prova, publicidade, litigância e legado institucional.</p>
+        </div>
+        <div id="masterplan-content"></div>
+      </section>
+
+      <section id="viabilidade" class="page-section standard-section">
+        <div class="area-header">
+          <h2>Viabilidade e Prazos</h2>
+          <p>Estimativas de investimento, cenários de suporte e horizonte temporal da incidência nacional e internacional.</p>
+        </div>
+        <div class="grid-2">
+          <div class="chart-box">
+            <div class="chart-title">Faixas de Investimento</div>
+            <div class="chart-subtitle">Cenário pro bono, híbrido e privado intensivo</div>
+            <div class="chart-container">
+              <canvas id="costChart"></canvas>
+            </div>
+          </div>
+          <div class="chart-box">
+            <div class="chart-title">Horizonte Temporal</div>
+            <div class="chart-subtitle">Curto, médio e longo prazo</div>
+            <div class="chart-container">
+              <canvas id="timelineChart"></canvas>
+            </div>
+          </div>
+        </div>
+        <div id="viabilidade-content"></div>
+      </section>
+
+      <section id="entidades" class="page-section standard-section">
+        <div class="area-header">
+          <h2>Rede de Defesa</h2>
+          <p>Organizações e instituições por especialidade de atuação, advocacy e proteção.</p>
+        </div>
+        <div class="filter-bar" id="entity-filters"></div>
+        <div id="entities-grid" class="entity-grid"></div>
+      </section>
+
+      <section id="diretorio" class="page-section standard-section">
+        <div class="area-header">
+          <h2>Diretório Estratégico</h2>
+          <p>Base editorial de referências públicas, organizações, imprensa, advocacy e suporte técnico.</p>
+        </div>
+
+        <div class="callout callout-blue">
+          A abordagem recomendada deve ser institucional, objetiva, verificável e livre de afirmações não demonstradas.
+          O foco deve estar em documentação, mérito, impacto público e proteção de direitos.
+        </div>
+
+        <div class="table-wrap">
+          <div class="table-toolbar">
+            <strong>Base de Contatos e Referências</strong>
+            <div class="toolbar-actions">
+              <select id="contact-category" class="input-select">
+                <option value="Todos">Todos</option>
+                <option value="Nacional">Nacional</option>
+                <option value="Internacional">Internacional</option>
+                <option value="Imprensa">Imprensa</option>
+                <option value="Institucional">Institucional</option>
+              </select>
+              <input id="contact-search" class="input-search" type="text" placeholder="Buscar nome, área ou organização" />
+            </div>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nome / Organização</th>
+                  <th>Especialidade / Papel</th>
+                  <th>Categoria</th>
+                </tr>
+              </thead>
+              <tbody id="contacts-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="agenda" class="page-section standard-section">
+        <div class="area-header">
+          <h2>Agenda de Contatos</h2>
+          <p>Categorização operacional para prospecção, acompanhamento, follow-up e incidência escalonada.</p>
+        </div>
+        <div id="agenda-content"></div>
+      </section>
+
+      <section id="nicho11" class="page-section standard-section">
+        <div class="area-header">
+          <h2>Nicho XI — Proteção Internacional e Antirretaliação</h2>
+          <p>Estruturas internacionais de proteção, prevenção à retaliação, memória documental e incidência multissetorial.</p>
+        </div>
+        <div id="nicho11-content"></div>
+      </section>
+
+      <section id="nicho12" class="page-section standard-section">
+        <div class="area-header">
+          <h2>Nicho XII — Petição Coletiva, Memória e Lideranças Públicas</h2>
+          <p>Construção de petição coletiva, organização de casos, coalizões e identificação de lideranças públicas por vias institucionais.</p>
+        </div>
+        <div id="nicho12-content"></div>
+      </section>
+
+    </div>
+  </main>
+
+  <script src="./data.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
